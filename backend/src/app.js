@@ -6,6 +6,8 @@ import helmet from 'helmet';
 import notFound from './middleware/not-found.middleware.js';
 import errorMiddleware from './middleware/error.middleware.js';
 
+import authRoutes from './modules/auth/auth.routes.js';
+
 
 const app = express();
 
@@ -29,6 +31,9 @@ if (process.env.NODE_ENV === "development") {
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok' });
 })
+
+
+app.use('/api/auth', authRoutes)
 
 app.use(notFound); // not found middleware
 

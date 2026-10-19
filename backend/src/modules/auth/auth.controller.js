@@ -103,3 +103,24 @@ export async function refresh(req, res, next){
         next(error)
     }
 }
+
+export async function logout(req, res, next){
+    try {
+        const token = req.cookies[REFRESH_COOKIES];
+        if(token) await RefreshToken.deleteOne({ tokenHash:hashToken(token)});
+        res.clearCookie(REFRESH_COOKIES, cookieOptions)
+        res.json({message:"Logged out"})
+    } catch (error) {
+        next(error)
+    }
+}
+
+export async function me(req, res, next){
+    try {
+        const user = await User.findById(req.userId).select('name email')
+        if(!user) return res.status(404).json({message:"User not found"})
+        res.json({user:{id:user._id, name:user.name, email:user.email}})
+    } catch (error) {
+        next(error)
+    }
+}
